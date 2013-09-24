@@ -1,6 +1,10 @@
 (ns crumpets.core
   (:require [clojure.string :as str]))
 
+(defprotocol ColorConversions
+  "Functions for converting colors to different formats."
+  (->int-argb [color] "Pack a color as a 32 bit ARGB int."))
+
 (defn- to-hex [byte]
   (let [s (Integer/toString byte 16)]
     (if (< byte 16)
@@ -11,11 +15,23 @@
   (Integer/parseInt hex 16))
 
 (defrecord ColorRGB [red green blue]
+  ColorConversions
+  (->int-argb [_]
+    (bit-or (bit-shift-left 255 24)
+            (bit-shift-left red 16)
+            (bit-shift-left green 8)
+            blue))
   Object
   (toString [_]
     (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
 
 (defrecord ColorRGBA [red green blue alpha]
+  ColorConversions
+  (->int-argb [_]
+    (bit-or (bit-shift-left alpha 24)
+            (bit-shift-left red 16)
+            (bit-shift-left green 8)
+            blue))
   Object
   (toString [_]
     (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
