@@ -48,7 +48,7 @@
 (defmethod print-dup ColorRGBA [^ColorRGBA c ^java.io.Writer w]
   (.write w (.toString c)))
 
-(defn hex->color [hex-string]
+(defn- hex->color [hex-string]
   (let [hex (str/replace hex-string #"^#" "")]
     (case (count hex)
       8 (let [[r g b a] (map from-hex (re-seq #".." hex))]
@@ -64,16 +64,17 @@
 (defn- floats->color [rgba]
   (ints->color (map #(int (* 255 %)) rgba)))
 
-(defn vec->color [[r g b a :as rgba]]
+(defn- vec->color [[r g b a :as rgba]]
   (cond
    (float? r) (floats->color rgba)
    (integer? r) (ints->color rgba)))
 
-(defprotocol ToColor
-  (->color [x]))
+(defprotocol ColorConstructor
+  "Protocol to create a color from a data structure."
+  (color [x] "Return a color created from the supplied data."))
 
-(extend-protocol ToColor
+(extend-protocol ColorConstructor
   String
-  (->color [s] (hex->color s))
+  (color [s] (hex->color s))
   clojure.lang.IPersistentVector
-  (->color [v] (vec->color v)))
+  (color [v] (vec->color v)))

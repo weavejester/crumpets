@@ -1,1 +1,1 @@
-{color crumpets.core/->color}
+{color crumpets.core/color}
