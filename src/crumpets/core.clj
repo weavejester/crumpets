@@ -39,3 +39,25 @@
           (->ColorRGBA r g b a))
       6 (let [[r g b] (map from-hex (re-seq #".." hex))]
           (->ColorRGB r g b)))))
+
+(defn- ints->color [[r g b a]]
+  (if a
+    (->ColorRGBA r g b a)
+    (->ColorRGB r g b)))
+
+(defn- floats->color [rgba]
+  (ints->color (map #(int (* 255 %)) rgba)))
+
+(defn vec->color [[r g b a :as rgba]]
+  (cond
+   (float? r) (floats->color rgba)
+   (integer? r) (ints->color rgba)))
+
+(defprotocol ToColor
+  (->color [x]))
+
+(extend-protocol ToColor
+  String
+  (->color [s] (hex->color s))
+  clojure.lang.IPersistentVector
+  (->color [v] (vec->color v)))

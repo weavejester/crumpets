@@ -1,1 +1,1 @@
-{color crumpets.core/hex->color}
+{color crumpets.core/->color}
