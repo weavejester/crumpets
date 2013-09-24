@@ -1,4 +1,5 @@
-(ns crumpets.core)
+(ns crumpets.core
+  (:require [clojure.string :as str]))
 
 (defn- to-hex [byte]
   (let [s (Integer/toString byte 16)]
@@ -12,12 +13,12 @@
 (defrecord ColorRGB [red green blue]
   Object
   (toString [_]
-    (str "#color \"" (to-hex red) (to-hex green) (to-hex blue) "\"")))
+    (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
 
 (defrecord ColorRGBA [red green blue alpha]
   Object
   (toString [_]
-    (str "#color \"" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
+    (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
 
 (defmethod print-method ColorRGB [^ColorRGB c ^java.io.Writer w]
   (.write w (.toString c)))
@@ -32,8 +33,9 @@
   (.write w (.toString c)))
 
 (defn hex->color [hex-string]
-  (case (count hex-string)
-    8 (let [[r g b a] (map from-hex (re-seq #".." hex-string))]
-        (->ColorRGBA r g b a))
-    6 (let [[r g b] (map from-hex (re-seq #".." hex-string))]
-        (->ColorRGB r g b))))
+  (let [hex (str/replace hex-string #"^#" "")]
+    (case (count hex)
+      8 (let [[r g b a] (map from-hex (re-seq #".." hex))]
+          (->ColorRGBA r g b a))
+      6 (let [[r g b] (map from-hex (re-seq #".." hex))]
+          (->ColorRGB r g b)))))
