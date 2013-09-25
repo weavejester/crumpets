@@ -1,9 +1,10 @@
 (ns crumpets.core
+  "Represent and manipulate color data."
   (:require [clojure.string :as str]))
 
 (defprotocol ColorConversions
   "Functions for converting colors to different formats."
-  (int-argb [color] "Pack a color as a 32 bit ARGB int."))
+  (int-argb [color] "Pack a color into a 32 bit ARGB int."))
 
 (defn- to-hex [byte]
   (let [s (Integer/toString byte 16)]
@@ -26,7 +27,8 @@
     (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
 
 (defn rgb
-  "Create an RGB color from red, green and blue values."
+  "Create an RGB color from red, green and blue values. The values should be
+  integers between 0 and 255."
   [r g b]
   (ColorRGB. r g b))
 
@@ -48,7 +50,8 @@
     (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
 
 (defn rgba
-  "Create an RGB color with red, green and blue values, plus an alpha channel."
+  "Create an RGB color with red, green and blue values, plus an alpha channel.
+  The values should be integers between 0 and 255."
   [r g b a]
   (ColorRGBA. r g b a))
 
