@@ -56,6 +56,10 @@ objects:
 (int-argb color-red)  ;; => 0xffff0000
 ```
 
+## Documentation
+
+* [API Docs](http://weavejester.github.io/crumpets/)
+
 ## License
 
 Copyright © 2013 James Reeves
