@@ -1,6 +1,7 @@
 # Crumpets
 
-A Clojure library for representing an manipulating color.
+A Clojure library for representing and manipulating color. It's
+currently usable, but has limited functionality.
 
 ## Installation
 
@@ -10,7 +11,17 @@ Add the following dependency to your `project.clj` file:
 
 ## Usage
 
-Crumpets provides a reader literal for representing RGB color data:
+Crumpets provides types for holding color data:
+
+```clojure
+(require '[crumpets.core :as color])
+
+(def color-red
+  (color/rgb 255 0 0))
+```
+
+Colors can also be defined through the `#color/rgb` reader literal,
+which supports a variety of formats:
 
 ```clojure
 #color/rgb "#ff0000"
@@ -26,6 +37,23 @@ Alpha channels can be encoded with the `#color/rgba` reader literal:
 ```clojure
 #color/rgba "#ff000099"
 #color/rgba [255 0 0 153]
+```
+
+Colors are records, so you can pull out their values by accessing the
+`:red`, `:green`, `:blue` and `:alpha` keys:
+
+```clojure
+(:red color-red)  ;; => 255
+```
+
+There's also functions for converting color data to different formats,
+such as the [integer ARGB format][1] that can be used in BufferedImage
+objects:
+
+[1]: http://docs.oracle.com/javase/7/docs/api/java/awt/image/BufferedImage.html#TYPE_INT_ARGB
+
+```clojure
+(int-argb color-red)  ;; => 0xffff0000
 ```
 
 ## License
