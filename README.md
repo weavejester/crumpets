@@ -39,11 +39,12 @@ Alpha channels can be encoded with the `#color/rgba` reader literal:
 #color/rgba [255 0 0 153]
 ```
 
-Colors are records, so you can pull out their values by accessing the
-`:red`, `:green`, `:blue` and `:alpha` keys:
+Colors implement the `ILookup` interface, so you can pull out their
+values by accessing the `:red`, `:green`, `:blue` and `:alpha` keys:
 
 ```clojure
-(:red color-red)  ;; => 255
+(:red color-red)       ;; => 255
+(get color-red :blue)  ;; => 0
 ```
 
 There's also functions for converting color data to different formats,

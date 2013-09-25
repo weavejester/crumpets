@@ -14,7 +14,25 @@
 (defn- from-hex [hex]
   (Integer/parseInt hex 16))
 
-(defrecord ColorRGB [red green blue]
+(deftype ColorRGB [red green blue]
+  clojure.lang.Counted
+  (count [_] 3)
+
+  clojure.lang.Sequential
+
+  clojure.lang.Seqable
+  (seq [_] (list red green blue))
+
+  clojure.lang.ILookup
+  (valAt [color key]
+    (.valAt color key nil))
+  (valAt [_ color not-found]
+    (case color :red red, :green green, :blue blue not-found))
+
+  clojure.lang.IFn
+  (invoke [q i]
+    (.valAt q i))
+  
   ColorConversions
   (int-argb [_]
     (bit-or (bit-shift-left 255 24)
@@ -23,10 +41,15 @@
             blue))
   Object
   (toString [_]
-    (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
+    (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\""))
+  (equals [self color]
+    (or (identical? self color)
+        (and (instance? ColorRGB color)
+             (= red   (:red color))
+             (= green (:green color))
+             (= blue  (:blue color))))))
 
 (alter-meta! #'->ColorRGB assoc :no-doc true)
-(alter-meta! #'map->ColorRGB assoc :no-doc true)
 
 (defn rgb
   "Create an RGB color from red, green and blue values. The values should be
@@ -40,7 +63,25 @@
 (defmethod print-dup ColorRGB [^ColorRGB c ^java.io.Writer w]
   (.write w (.toString c)))
 
-(defrecord ColorRGBA [red green blue alpha]
+(deftype ColorRGBA [red green blue alpha]
+  clojure.lang.Counted
+  (count [_] 4)
+
+  clojure.lang.Sequential
+
+  clojure.lang.Seqable
+  (seq [_] (list red green blue alpha))
+
+  clojure.lang.ILookup
+  (valAt [color key]
+    (.valAt color key nil))
+  (valAt [_ color not-found]
+    (case color :red red, :green green, :blue blue, :alpha alpha not-found))
+
+  clojure.lang.IFn
+  (invoke [q i]
+    (.valAt q i))
+  
   ColorConversions
   (int-argb [_]
     (bit-or (bit-shift-left alpha 24)
@@ -49,10 +90,16 @@
             blue))
   Object
   (toString [_]
-    (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
+    (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\""))
+  (equals [self color]
+    (or (identical? self color)
+        (and (instance? ColorRGBA color)
+             (= red   (:red color))
+             (= green (:green color))
+             (= blue  (:blue color))
+             (= alpha (:alpha color))))))
 
 (alter-meta! #'->ColorRGBA assoc :no-doc true)
-(alter-meta! #'map->ColorRGBA assoc :no-doc true)
 
 (defn rgba
   "Create an RGB color with red, green and blue values, plus an alpha channel.
