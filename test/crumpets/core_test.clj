@@ -41,6 +41,10 @@
   (is (= (int-argb (->rgb "#ff9900"))    0xffff9900))
   (is (= (int-argb (->rgba "#ff9900aa")) 0xaaff9900)))
 
+(deftest hex-test
+  (is (= (hex (rgb 255 153 0)) "#ff9900"))
+  (is (= (hex (rgba 255 153 0 170)) "#ff9900aa")))
+
 (deftest lookup-test
   (testing "RGB"
     (let [c (rgb 200 150 100)]

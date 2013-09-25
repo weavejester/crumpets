@@ -3,15 +3,16 @@
   (:require [clojure.string :as str]))
 
 (defprotocol ^:no-doc ColorConversions
+  (hex [color] "Return the hex string of the color.")
   (int-argb [color] "Pack a color into a 32 bit ARGB int."))
 
-(defn- to-hex [byte]
+(defn- byte->hex [byte]
   (let [s (Integer/toString byte 16)]
     (if (< byte 16)
       (str "0" s)
       s)))
 
-(defn- from-hex [hex]
+(defn- hex->byte [hex]
   (Integer/parseInt hex 16))
 
 (deftype ColorRGB [red green blue]
@@ -34,14 +35,16 @@
     (.valAt q i))
   
   ColorConversions
+  (hex [_]
+    (str "#" (byte->hex red) (byte->hex green) (byte->hex blue)))
   (int-argb [_]
     (bit-or (bit-shift-left 255 24)
             (bit-shift-left red 16)
             (bit-shift-left green 8)
             blue))
   Object
-  (toString [_]
-    (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\""))
+  (toString [self]
+    (str "#color/rgb \"" (hex self) "\""))
   (equals [self color]
     (or (identical? self color)
         (and (instance? ColorRGB color)
@@ -83,14 +86,16 @@
     (.valAt q i))
   
   ColorConversions
+  (hex [_]
+    (str "#" (byte->hex red) (byte->hex green) (byte->hex blue) (byte->hex alpha)))
   (int-argb [_]
     (bit-or (bit-shift-left alpha 24)
             (bit-shift-left red 16)
             (bit-shift-left green 8)
             blue))
   Object
-  (toString [_]
-    (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\""))
+  (toString [self]
+    (str "#color/rgba \"" (hex self) "\""))
   (equals [self color]
     (or (identical? self color)
         (and (instance? ColorRGBA color)
@@ -116,7 +121,7 @@
 (defn- hex-bytes [hex-string]
   (->> (str/replace hex-string #"^#" "")
        (re-seq #"..")
-       (map from-hex)))
+       (map hex->byte)))
 
 (defn- vec-bytes [v]
   (if (some float? v)
