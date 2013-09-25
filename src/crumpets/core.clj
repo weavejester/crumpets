@@ -2,8 +2,7 @@
   "Represent and manipulate color data."
   (:require [clojure.string :as str]))
 
-(defprotocol ColorConversions
-  "Functions for converting colors to different formats."
+(defprotocol ^:no-doc ColorConversions
   (int-argb [color] "Pack a color into a 32 bit ARGB int."))
 
 (defn- to-hex [byte]
@@ -25,6 +24,9 @@
   Object
   (toString [_]
     (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
+
+(alter-meta! #'->ColorRGB assoc :no-doc true)
+(alter-meta! #'map->ColorRGB assoc :no-doc true)
 
 (defn rgb
   "Create an RGB color from red, green and blue values. The values should be
@@ -49,6 +51,9 @@
   (toString [_]
     (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
 
+(alter-meta! #'->ColorRGBA assoc :no-doc true)
+(alter-meta! #'map->ColorRGBA assoc :no-doc true)
+
 (defn rgba
   "Create an RGB color with red, green and blue values, plus an alpha channel.
   The values should be integers between 0 and 255."
@@ -71,7 +76,7 @@
     (map #(int (* 255 %)) v)
     v))
 
-(defprotocol ToRGB
+(defprotocol ^:no-doc ToRGB
   (->rgb [x] "Turn a data structure into an RGB color."))
 
 (extend-protocol ToRGB
@@ -80,7 +85,7 @@
   clojure.lang.IPersistentVector
   (->rgb [v] (apply rgb (vec-bytes v))))
 
-(defprotocol ToRGBA
+(defprotocol ^:no-doc ToRGBA
   (->rgba [x] "Turn a data structure into an RGB color with an alpha channel."))
 
 (extend-protocol ToRGBA
