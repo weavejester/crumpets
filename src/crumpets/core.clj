@@ -23,7 +23,18 @@
             blue))
   Object
   (toString [_]
-    (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
+    (str "#color/rgb \"#" (to-hex red) (to-hex green) (to-hex blue) "\"")))
+
+(defn rgb
+  "Create an RGB color from red, green and blue values."
+  [r g b]
+  (ColorRGB. r g b))
+
+(defmethod print-method ColorRGB [^ColorRGB c ^java.io.Writer w]
+  (.write w (.toString c)))
+
+(defmethod print-dup ColorRGB [^ColorRGB c ^java.io.Writer w]
+  (.write w (.toString c)))
 
 (defrecord ColorRGBA [red green blue alpha]
   ColorConversions
@@ -34,13 +45,12 @@
             blue))
   Object
   (toString [_]
-    (str "#color \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
+    (str "#color/rgba \"#" (to-hex red) (to-hex green) (to-hex blue) (to-hex alpha) "\"")))
 
-(defmethod print-method ColorRGB [^ColorRGB c ^java.io.Writer w]
-  (.write w (.toString c)))
-
-(defmethod print-dup ColorRGB [^ColorRGB c ^java.io.Writer w]
-  (.write w (.toString c)))
+(defn rgba
+  "Create an RGB color with red, green and blue values, plus an alpha channel."
+  [r g b a]
+  (ColorRGBA. r g b a))
 
 (defmethod print-method ColorRGBA [^ColorRGBA c ^java.io.Writer w]
   (.write w (.toString c)))
@@ -48,33 +58,32 @@
 (defmethod print-dup ColorRGBA [^ColorRGBA c ^java.io.Writer w]
   (.write w (.toString c)))
 
-(defn- hex->color [hex-string]
-  (let [hex (str/replace hex-string #"^#" "")]
-    (case (count hex)
-      8 (let [[r g b a] (map from-hex (re-seq #".." hex))]
-          (->ColorRGBA r g b a))
-      6 (let [[r g b] (map from-hex (re-seq #".." hex))]
-          (->ColorRGB r g b)))))
+(defn- hex-bytes [hex-string]
+  (->> (str/replace hex-string #"^#" "")
+       (re-seq #"..")
+       (map from-hex)))
 
-(defn- ints->color [[r g b a]]
-  (if a
-    (->ColorRGBA r g b a)
-    (->ColorRGB r g b)))
+(defn- vec-bytes [v]
+  (if (some float? v)
+    (map #(int (* 255 %)) v)
+    v))
 
-(defn- floats->color [rgba]
-  (ints->color (map #(int (* 255 %)) rgba)))
+(defprotocol ToRGB
+  (->rgb [x] "Turn a data structure into an RGB color."))
 
-(defn- vec->color [[r g b a :as rgba]]
-  (cond
-   (float? r) (floats->color rgba)
-   (integer? r) (ints->color rgba)))
-
-(defprotocol ColorConstructor
-  "Protocol to create a color from a data structure."
-  (color [x] "Return a color created from the supplied data."))
-
-(extend-protocol ColorConstructor
+(extend-protocol ToRGB
   String
-  (color [s] (hex->color s))
+  (->rgb [s] (apply rgb (hex-bytes s)))
   clojure.lang.IPersistentVector
-  (color [v] (vec->color v)))
+  (->rgb [v] (apply rgb (vec-bytes v))))
+
+(defprotocol ToRGBA
+  (->rgba [x] "Turn a data structure into an RGB color with an alpha channel."))
+
+(extend-protocol ToRGBA
+  String
+  (->rgba [s] (apply rgba (hex-bytes s)))
+  clojure.lang.IPersistentVector
+  (->rgba [v] (apply rgba (vec-bytes v)))
+  ColorRGB
+  (->rgba [c] (rgba (:red c) (:green c) (:blue c) 255)))
