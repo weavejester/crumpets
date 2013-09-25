@@ -1,4 +1,4 @@
-(defproject crumpets "0.1.1"
+(defproject crumpets "0.1.2"
   :description "Library for representing and manipulating color data"
   :url "https://github.com/weavejester/crumpets"
   :license {:name "Eclipse Public License"
