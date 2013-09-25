@@ -1,5 +1,7 @@
 # Crumpets
 
+[![Build Status](https://travis-ci.org/weavejester/crumpets.png?branch=master)](https://travis-ci.org/weavejester/crumpets)
+
 A Clojure library for representing and manipulating color. It's
 currently usable, but has limited functionality.
 
