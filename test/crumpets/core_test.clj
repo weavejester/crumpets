@@ -37,6 +37,6 @@
   (is (= (->rgb "#ff0099")
          (rgb 255 0 153))))
 
-(deftest ->int-argb-test
-  (is (= (->int-argb (->rgb "#ff9900"))   0xffff9900))
-  (is (= (->int-argb (->rgba "#ff9900aa")) 0xaaff9900)))
+(deftest int-argb-test
+  (is (= (int-argb (->rgb "#ff9900"))    0xffff9900))
+  (is (= (int-argb (->rgba "#ff9900aa")) 0xaaff9900)))

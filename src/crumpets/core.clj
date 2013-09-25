@@ -3,7 +3,7 @@
 
 (defprotocol ColorConversions
   "Functions for converting colors to different formats."
-  (->int-argb [color] "Pack a color as a 32 bit ARGB int."))
+  (int-argb [color] "Pack a color as a 32 bit ARGB int."))
 
 (defn- to-hex [byte]
   (let [s (Integer/toString byte 16)]
@@ -16,7 +16,7 @@
 
 (defrecord ColorRGB [red green blue]
   ColorConversions
-  (->int-argb [_]
+  (int-argb [_]
     (bit-or (bit-shift-left 255 24)
             (bit-shift-left red 16)
             (bit-shift-left green 8)
@@ -38,7 +38,7 @@
 
 (defrecord ColorRGBA [red green blue alpha]
   ColorConversions
-  (->int-argb [_]
+  (int-argb [_]
     (bit-or (bit-shift-left alpha 24)
             (bit-shift-left red 16)
             (bit-shift-left green 8)
