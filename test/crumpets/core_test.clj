@@ -41,6 +41,21 @@
   (is (= (int-argb (->rgb "#ff9900"))    0xffff9900))
   (is (= (int-argb (->rgba "#ff9900aa")) 0xaaff9900)))
 
+(deftest awt-color-test
+  (testing "RGB"
+    (let [c (awt-color (->rgb [255 153 0]))]
+      (is (instance? java.awt.Color c))
+      (is (= (.getRed c) 255))
+      (is (= (.getGreen c) 153))
+      (is (= (.getBlue c) 0))))
+  (testing "RGBA"
+    (let [c (awt-color (->rgba [255 153 0 102]))]
+      (is (instance? java.awt.Color c))
+      (is (= (.getRed c) 255))
+      (is (= (.getGreen c) 153))
+      (is (= (.getBlue c) 0))
+      (is (= (.getAlpha c) 102)))))
+
 (deftest hex-test
   (is (= (hex (rgb 255 153 0)) "#ff9900"))
   (is (= (hex (rgba 255 153 0 170)) "#ff9900aa")))

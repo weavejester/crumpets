@@ -4,7 +4,8 @@
 
 (defprotocol ^:no-doc ColorConversions
   (hex [color] "Return the hex string of the color.")
-  (int-argb [color] "Pack a color into a 32 bit ARGB int."))
+  (int-argb [color] "Pack a color into a 32 bit ARGB int.")
+  (awt-color [color] "Create a java.awt.Color object from the color."))
 
 (defn- byte->hex [byte]
   (let [s (Integer/toString byte 16)]
@@ -42,6 +43,9 @@
             (bit-shift-left red 16)
             (bit-shift-left green 8)
             blue))
+  (awt-color [_]
+    (java.awt.Color. red green blue))
+
   Object
   (toString [self]
     (str "#color/rgb \"" (hex self) "\""))
@@ -93,6 +97,9 @@
             (bit-shift-left red 16)
             (bit-shift-left green 8)
             blue))
+  (awt-color [_]
+    (java.awt.Color. red green blue alpha))
+
   Object
   (toString [self]
     (str "#color/rgba \"" (hex self) "\""))
