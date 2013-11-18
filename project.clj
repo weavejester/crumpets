@@ -4,6 +4,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.4.0"]]
-  :plugins [[codox "0.6.5"]]
+  :plugins [[codox "0.6.6"]]
   :profiles
   {:1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}})
