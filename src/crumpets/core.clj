@@ -44,7 +44,7 @@
             (bit-shift-left green 8)
             blue))
   (awt-color [_]
-    (java.awt.Color. red green blue))
+    (java.awt.Color. ^int red ^int green ^int blue))
 
   Object
   (toString [self]
@@ -98,7 +98,7 @@
             (bit-shift-left green 8)
             blue))
   (awt-color [_]
-    (java.awt.Color. red green blue alpha))
+    (java.awt.Color. ^int red ^int green ^int blue ^int alpha))
 
   Object
   (toString [self]
