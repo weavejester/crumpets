@@ -39,10 +39,10 @@
   (hex [_]
     (str "#" (byte->hex red) (byte->hex green) (byte->hex blue)))
   (int-argb [_]
-    (bit-or (bit-shift-left 255 24)
-            (bit-shift-left red 16)
-            (bit-shift-left green 8)
-            blue))
+    (.intValue ^Long (bit-or (bit-shift-left 255 24)
+                             (bit-shift-left red 16)
+                             (bit-shift-left green 8)
+                             blue)))
   (awt-color [_]
     (java.awt.Color. ^int red ^int green ^int blue))
 
@@ -93,10 +93,10 @@
   (hex [_]
     (str "#" (byte->hex red) (byte->hex green) (byte->hex blue) (byte->hex alpha)))
   (int-argb [_]
-    (bit-or (bit-shift-left alpha 24)
-            (bit-shift-left red 16)
-            (bit-shift-left green 8)
-            blue))
+    (.intValue ^Long (bit-or (bit-shift-left alpha 24)
+                             (bit-shift-left red 16)
+                             (bit-shift-left green 8)
+                             blue)))
   (awt-color [_]
     (java.awt.Color. ^int red ^int green ^int blue ^int alpha))
 

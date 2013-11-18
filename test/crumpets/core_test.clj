@@ -38,8 +38,9 @@
          (rgb 255 0 153))))
 
 (deftest int-argb-test
-  (is (= (int-argb (->rgb "#ff9900"))    0xffff9900))
-  (is (= (int-argb (->rgba "#ff9900aa")) 0xaaff9900)))
+  (is (instance? Integer (int-argb (->rgb "#ffffff"))))
+  (is (= (int-argb (->rgb "#ff9900"))    (.intValue 0xffff9900)))
+  (is (= (int-argb (->rgba "#ff9900aa")) (.intValue 0xaaff9900))))
 
 (deftest awt-color-test
   (testing "RGB"
