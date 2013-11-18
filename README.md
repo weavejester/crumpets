@@ -9,7 +9,7 @@ currently usable, but has limited functionality.
 
 Add the following dependency to your `project.clj` file:
 
-    [crumpets "0.1.3"]
+    [crumpets "0.1.4"]
 
 ## Usage
 
